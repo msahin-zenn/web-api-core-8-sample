@@ -26,7 +26,7 @@ namespace WebApiCore8Sample.Controllers
         [HttpPost]
         public IActionResult Login([FromBody] ApiUser apiUser)
         {
-            var user = IdentityAuthenticationValidate(apiUser);
+            var user = AuthenticationValidate(apiUser);
 
             if (user == null) return NotFound("Kullanıcı Bulunamadı.");
 
@@ -35,7 +35,7 @@ namespace WebApiCore8Sample.Controllers
             return Ok(token);
         }
 
-        private ApiUser? IdentityAuthenticationValidate(ApiUser apiUser)
+        private ApiUser? AuthenticationValidate(ApiUser apiUser)
         {
             return ApiUsers.Users
                     .FirstOrDefault(user => user.Username == apiUser.Username
