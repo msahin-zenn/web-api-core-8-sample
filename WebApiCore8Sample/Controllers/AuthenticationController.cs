@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using WebApiCore8Sample.Dtos;
 using WebApiCore8Sample.Models;
 
 namespace WebApiCore8Sample.Controllers
@@ -24,8 +25,14 @@ namespace WebApiCore8Sample.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Login([FromBody] ApiUser apiUser)
+        public IActionResult Login([FromBody] ApiUserRequestDto apiUserDto)
         {
+            if (apiUserDto == null) return NotFound("Kullanıcı Bulunamadı.");
+
+            var apiUser = new ApiUser();
+            apiUser.Username = apiUserDto.Username;
+            apiUser.Password = apiUserDto.Password;
+
             var user = AuthenticationValidate(apiUser);
 
             if (user == null) return NotFound("Kullanıcı Bulunamadı.");
@@ -38,8 +45,8 @@ namespace WebApiCore8Sample.Controllers
         private ApiUser? AuthenticationValidate(ApiUser apiUser)
         {
             return ApiUsers.Users
-                    .FirstOrDefault(user => user.Username == apiUser.Username
-                                    && user.Password == apiUser.Password);
+                     .FirstOrDefault(user => user.Username == apiUser.Username
+                                     && user.Password == apiUser.Password);
         }
 
         private string CreateToken(ApiUser user)
