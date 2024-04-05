@@ -17,11 +17,11 @@ namespace WebApiCore8Sample.Controllers
 
         // GET: api/<CharacterController>
         [HttpGet]
-        public ActionResult<Character> Get()
+        public async Task<ActionResult<Character>> Get()
         {
             try
             {
-                return Ok(characterService.Get());
+                return Ok(await characterService.Get());
             }
             catch (Exception ex)
             {
@@ -31,11 +31,11 @@ namespace WebApiCore8Sample.Controllers
 
         // GET api/<CharacterController>/5
         [HttpGet("{id}")]
-        public ActionResult<Character> Get(int id)
+        public async Task<ActionResult<Character>> Get(int id)
         {
             try
             {
-                return Ok(characterService.Get(id));
+                return Ok(await characterService.Get(id));
             }
             catch (Exception ex)
             {
@@ -45,11 +45,11 @@ namespace WebApiCore8Sample.Controllers
 
         // POST api/<CharacterController>
         [HttpPost]
-        public ActionResult<Character> Post([FromBody] Character character)
+        public async Task<ActionResult<Character>> Post([FromBody] Character character)
         {
             try
             {
-                return Ok(characterService.Add(character));
+                return Ok(await characterService.Add(character));
             }
             catch (Exception ex)
             {
@@ -59,11 +59,11 @@ namespace WebApiCore8Sample.Controllers
 
         // PUT api/<CharacterController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Character character)
+        public async Task Put(int id, [FromBody] Character character)
         {
             try
             {
-                characterService.Update(id, character);
+                await characterService.Update(id, character);
             }
             catch (Exception ex)
             {
@@ -72,11 +72,11 @@ namespace WebApiCore8Sample.Controllers
 
         // DELETE api/<CharacterController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
             try
             {
-                characterService.Delete(id);
+                await characterService.Delete(id);
             }
             catch (Exception ex)
             {

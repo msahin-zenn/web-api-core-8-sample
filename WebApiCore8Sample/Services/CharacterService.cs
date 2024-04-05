@@ -17,12 +17,12 @@ namespace WebApiCore8Sample.Services
             }
         };
 
-        public List<Character> Get()
+        public async Task<List<Character>> Get()
         {
             return characters;
         }
 
-        public Character Get(int id)
+        public async Task<Character> Get(int id)
         {
             var c = characters.FirstOrDefault(item => item.Id == id);
 
@@ -34,13 +34,13 @@ namespace WebApiCore8Sample.Services
             return c;
         }
 
-        public Character Add(Character character)
+        public async Task<Character> Add(Character character)
         {
             characters.Add(character);
             return character;
         }
 
-        public Character Update(int id, Character character)
+        public async Task<Character> Update(int id, Character character)
         {
             if (character == null)
             {
@@ -64,7 +64,7 @@ namespace WebApiCore8Sample.Services
             return c;
         }
 
-        public void Delete(int id)
+        public async Task Delete(int id)
         {
             var c = characters.FirstOrDefault(item => item.Id == id);
 
@@ -73,7 +73,7 @@ namespace WebApiCore8Sample.Services
             characters.Remove(c);
         }
 
-        public void Delete(Character character)
+        public async Task Delete(Character character)
         {
             if (character == null) return;
 

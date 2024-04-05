@@ -4,13 +4,13 @@ namespace WebApiCore8Sample.Services
 {
     public interface ICharacterService
     {
-        List<Character> Get();
-        Character Get(int id);
+        Task<List<Character>> Get();
+        Task<Character> Get(int id);
 
-        Character Add(Character character);
-        Character Update(int id, Character character);
+        Task<Character> Add(Character character);
+        Task<Character> Update(int id, Character character);
 
-        void Delete(int id);
-        void Delete(Character character);
+        Task Delete(int id);
+        Task Delete(Character character);
     }
 }
