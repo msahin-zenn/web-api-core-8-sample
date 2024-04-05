@@ -12,7 +12,7 @@ namespace WebApiCore8Sample.Controllers
     {
         // GET: api/<ApiUserController>
         [HttpGet]
-        public IActionResult Get()
+        public ActionResult<ApiUserResponseDto> Get()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
 
