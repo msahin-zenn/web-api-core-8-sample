@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebApiCore8Sample.Data;
 using WebApiCore8Sample.Models;
+using WebApiCore8Sample.Services;
 
 namespace WebApiCore8Sample
 {
@@ -41,6 +42,7 @@ namespace WebApiCore8Sample
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped<ICharacterService, CharacterService>();
 
             var app = builder.Build();
 
