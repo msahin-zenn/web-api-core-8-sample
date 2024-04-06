@@ -17,41 +17,79 @@ namespace WebApiCore8Sample.Services
             }
         };
 
-        public async Task<List<Character>> Get()
+        public async Task<ServiceResponse<List<Character>>> Get()
         {
-            return characters;
+            var response = new ServiceResponse<List<Character>>();
+
+            response.Data = characters;
+            return response;
         }
 
-        public async Task<Character> Get(int id)
+        public async Task<ServiceResponse<Character>> Get(int id)
         {
-            var c = characters.FirstOrDefault(item => item.Id == id);
+            var response = new ServiceResponse<Character>();
 
-            if (c == null)
-            {
-                throw new Exception(nameof(NotFound));
-            }
+            var character = characters.FirstOrDefault(item => item.Id == id);
 
-            return c;
-        }
-
-        public async Task<Character> Add(Character character)
-        {
-            characters.Add(character);
-            return character;
-        }
-
-        public async Task<Character> Update(int id, Character character)
-        {
             if (character == null)
             {
-                throw new ArgumentNullException(nameof(Character));
+                response.Data = null;
+                response.Status = false;
+                response.Detail = "Not found";
+
+                return response;
+            }
+
+            response.Data = character;
+            return response;
+        }
+
+        public async Task<ServiceResponse<Character>> Add(Character character)
+        {
+            var response = new ServiceResponse<Character>();
+
+            if (character == null)
+            {
+                response.Data = null;
+                response.Status = false;
+                response.Detail = "Not found";
+
+                return response;
+            }
+
+            var c = characters.FirstOrDefault(item => item.Name == character.Name);
+
+            if (c == null)
+            {
+                characters.Add(c);
+                response.Data = character;
+            }
+
+            return response;
+        }
+
+        public async Task<ServiceResponse<Character>> Update(int id, Character character)
+        {
+            var response = new ServiceResponse<Character>();
+
+            if (character == null)
+            {
+                response.Data = null;
+                response.Status = false;
+                response.Detail = "Not found";
+
+                return response;
             }
 
             var c = characters.FirstOrDefault(item => item.Id == id);
 
             if (c == null)
             {
-                throw new Exception(nameof(NotFound));
+                response.Data = null;
+                response.Status = false;
+                response.Detail = "Not found";
+
+                return response;
             }
 
             c.Name = character.Name;
@@ -61,7 +99,8 @@ namespace WebApiCore8Sample.Services
             c.Intelligence = character.Intelligence;
             c.Class = character.Class;
 
-            return c;
+            response.Data = c;
+            return response;
         }
 
         public async Task Delete(int id)

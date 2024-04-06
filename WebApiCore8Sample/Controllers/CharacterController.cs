@@ -17,7 +17,7 @@ namespace WebApiCore8Sample.Controllers
 
         // GET: api/<CharacterController>
         [HttpGet]
-        public async Task<ActionResult<Character>> Get()
+        public async Task<ActionResult<ServiceResponse<Character>>> Get()
         {
             try
             {
@@ -31,7 +31,7 @@ namespace WebApiCore8Sample.Controllers
 
         // GET api/<CharacterController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Character>> Get(int id)
+        public async Task<ActionResult<ServiceResponse<Character>>> Get(int id)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace WebApiCore8Sample.Controllers
 
         // POST api/<CharacterController>
         [HttpPost]
-        public async Task<ActionResult<Character>> Post([FromBody] Character character)
+        public async Task<ActionResult<ServiceResponse<Character>>> Post([FromBody] Character character)
         {
             try
             {
