@@ -1,6 +1,6 @@
 ﻿using WebApiCore8Sample.Models;
 
-namespace WebApiCore8Sample.Services
+namespace WebApiCore8Sample.Services.AuthService
 {
     public interface IAuthService
     {

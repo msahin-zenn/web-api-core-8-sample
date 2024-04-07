@@ -1,7 +1,7 @@
 ﻿using WebApiCore8Sample.Dtos;
 using WebApiCore8Sample.Models;
 
-namespace WebApiCore8Sample.Services
+namespace WebApiCore8Sample.Services.CharacterService
 {
     public interface ICharacterService
     {

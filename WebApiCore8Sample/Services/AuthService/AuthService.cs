@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -7,21 +6,18 @@ using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Xml.Serialization;
 using WebApiCore8Sample.Data;
 using WebApiCore8Sample.Models;
 
-namespace WebApiCore8Sample.Services
+namespace WebApiCore8Sample.Services.AuthService
 {
     public class AuthService : IAuthService
     {
-        private readonly IMapper mapper;
         private readonly DataContext context;
         private readonly JwtSettings jwtSettings;
 
-        public AuthService(IMapper mapper, DataContext context, IOptions<JwtSettings> jwtSettings)
+        public AuthService(DataContext context, IOptions<JwtSettings> jwtSettings)
         {
-            this.mapper = mapper;
             this.context = context;
             this.jwtSettings = jwtSettings.Value;
         }

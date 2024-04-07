@@ -5,7 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using WebApiCore8Sample.Data;
 using WebApiCore8Sample.Models;
-using WebApiCore8Sample.Services;
+using WebApiCore8Sample.Services.AuthService;
+using WebApiCore8Sample.Services.CharacterService;
 
 namespace WebApiCore8Sample
 {
@@ -40,6 +41,7 @@ namespace WebApiCore8Sample
             builder.Services.AddControllers();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
@@ -55,7 +57,6 @@ namespace WebApiCore8Sample
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

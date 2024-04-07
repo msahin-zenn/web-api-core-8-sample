@@ -1,15 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
-using System.Security.Claims;
-using System.Text;
 using WebApiCore8Sample.Dtos;
 using WebApiCore8Sample.Models;
-using WebApiCore8Sample.Services;
+using WebApiCore8Sample.Services.AuthService;
 
 namespace WebApiCore8Sample.Controllers
 {

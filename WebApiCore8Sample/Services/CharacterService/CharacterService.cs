@@ -1,19 +1,18 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using WebApiCore8Sample.Data;
 using WebApiCore8Sample.Dtos;
 using WebApiCore8Sample.Models;
 
-namespace WebApiCore8Sample.Services
+namespace WebApiCore8Sample.Services.CharacterService
 {
     public class CharacterService : ICharacterService
     {
         private readonly IMapper mapper;
         private readonly DataContext context;
 
-        public CharacterService(IMapper mapper, DataContext context)
+        public CharacterService(DataContext context, IMapper mapper)
         {
             this.mapper = mapper;
             this.context = context;

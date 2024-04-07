@@ -1,9 +1,8 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using WebApiCore8Sample.Dtos;
 using WebApiCore8Sample.Models;
-using WebApiCore8Sample.Services;
+using WebApiCore8Sample.Services.CharacterService;
 
 namespace WebApiCore8Sample.Controllers
 {
