@@ -47,11 +47,12 @@ namespace WebApiCore8Sample
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
-                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme {
-                Description = "Bearer Scheme in Header",
-                In = ParameterLocation.Header,
-                Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Description = "Bearer Scheme in Header",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
                 });
                 c.OperationFilter<SecurityRequirementsOperationFilter>();
             });
