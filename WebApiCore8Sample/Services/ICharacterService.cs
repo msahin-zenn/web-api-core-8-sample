@@ -1,16 +1,16 @@
-﻿using WebApiCore8Sample.Models;
+﻿using WebApiCore8Sample.Dtos;
+using WebApiCore8Sample.Models;
 
 namespace WebApiCore8Sample.Services
 {
     public interface ICharacterService
     {
-        Task<ServiceResponse<List<Character>>> Get();
-        Task<ServiceResponse<Character>> Get(int id);
+        Task<ServiceResponse<List<CharacterGetDto>>> Get();
+        Task<ServiceResponse<CharacterGetDto>> Get(int id);
 
-        Task<ServiceResponse<Character>> Add(Character character);
-        Task<ServiceResponse<Character>> Update(int id, Character character);
+        Task<ServiceResponse<CharacterGetDto>> Add(CharacterAddDto character);
+        Task<ServiceResponse<CharacterGetDto>> Update(int id, CharacterUpdateDto character);
 
         Task Delete(int id);
-        Task Delete(Character character);
     }
 }

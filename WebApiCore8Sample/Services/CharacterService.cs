@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.Net;
+using WebApiCore8Sample.Dtos;
 using WebApiCore8Sample.Models;
 
 namespace WebApiCore8Sample.Services
@@ -17,17 +20,24 @@ namespace WebApiCore8Sample.Services
             }
         };
 
-        public async Task<ServiceResponse<List<Character>>> Get()
-        {
-            var response = new ServiceResponse<List<Character>>();
+        private readonly IMapper mapper;
 
-            response.Data = characters;
+        public CharacterService(IMapper mapper)
+        {
+            this.mapper = mapper;
+        }
+
+        public async Task<ServiceResponse<List<CharacterGetDto>>> Get()
+        {
+            var response = new ServiceResponse<List<CharacterGetDto>>();
+
+            response.Data = mapper.Map<List<CharacterGetDto>>(characters);
             return response;
         }
 
-        public async Task<ServiceResponse<Character>> Get(int id)
+        public async Task<ServiceResponse<CharacterGetDto>> Get(int id)
         {
-            var response = new ServiceResponse<Character>();
+            var response = new ServiceResponse<CharacterGetDto>();
 
             var character = characters.FirstOrDefault(item => item.Id == id);
 
@@ -35,88 +45,103 @@ namespace WebApiCore8Sample.Services
             {
                 response.Data = null;
                 response.Status = false;
-                response.Detail = "Not found";
+                response.StatusCode = (int)HttpStatusCode.NotFound;
+                response.Detail = "Not found.";
 
                 return response;
             }
 
-            response.Data = character;
+            response.Data = mapper.Map<CharacterGetDto>(character);
             return response;
         }
 
-        public async Task<ServiceResponse<Character>> Add(Character character)
+        public async Task<ServiceResponse<CharacterGetDto>> Add(CharacterAddDto characterInput)
         {
-            var response = new ServiceResponse<Character>();
+            var response = new ServiceResponse<CharacterGetDto>();
+
+            if (characterInput == null)
+            {
+                response.Data = null;
+                response.Status = false;
+                response.StatusCode = (int)HttpStatusCode.NotFound;
+                response.Detail = "Not found.";
+
+                return response;
+            }
+
+            if (characterInput.Name == "")
+            {
+                response.Data = null;
+                response.Status = false;
+                response.StatusCode = (int)HttpStatusCode.BadRequest;
+                response.Detail = "Bad request. Name can not be empty.";
+
+                return response;
+            }
+
+            var character = characters.FirstOrDefault(item => item.Name == characterInput.Name);
+
+            if (character != null)
+            {
+                response.Data = null;
+                response.Status = false;
+                response.StatusCode = (int)HttpStatusCode.BadRequest;
+                response.Detail = "Bad request. Item already exists.";
+
+                return response;
+            }
+
+            var c = mapper.Map<Character>(characterInput);
+            c.Id = characters.Max(item => item.Id) + 1;
+
+            characters.Add(c);
+            response.Data = mapper.Map<CharacterGetDto>(c);
+            return response;
+        }
+
+        public async Task<ServiceResponse<CharacterGetDto>> Update(int id, CharacterUpdateDto characterInput)
+        {
+            var response = new ServiceResponse<CharacterGetDto>();
+
+            var character = characters.FirstOrDefault(item => item.Id == id);
 
             if (character == null)
             {
                 response.Data = null;
                 response.Status = false;
-                response.Detail = "Not found";
+                response.StatusCode = (int)HttpStatusCode.NotFound;
+                response.Detail = "Not found.";
 
                 return response;
             }
 
-            var c = characters.FirstOrDefault(item => item.Name == character.Name);
-
-            if (c == null)
-            {
-                characters.Add(c);
-                response.Data = character;
-            }
-
-            return response;
-        }
-
-        public async Task<ServiceResponse<Character>> Update(int id, Character character)
-        {
-            var response = new ServiceResponse<Character>();
-
-            if (character == null)
+            if (characterInput == null)
             {
                 response.Data = null;
                 response.Status = false;
-                response.Detail = "Not found";
+                response.StatusCode = (int)HttpStatusCode.NotFound;
+                response.Detail = "Not found.";
 
                 return response;
             }
 
-            var c = characters.FirstOrDefault(item => item.Id == id);
-
-            if (c == null)
+            if (characterInput.Name == "")
             {
                 response.Data = null;
                 response.Status = false;
-                response.Detail = "Not found";
+                response.StatusCode = (int)HttpStatusCode.BadRequest;
+                response.Detail = "Bad request. Name can not be empty.";
 
                 return response;
             }
 
-            c.Name = character.Name;
-            c.HintPoints = character.HintPoints;
-            c.Strength = character.Strength;
-            c.Defence = character.Defence;
-            c.Intelligence = character.Intelligence;
-            c.Class = character.Class;
-
-            response.Data = c;
+            response.Data = mapper.Map<CharacterGetDto>(mapper.Map(characterInput, character));
             return response;
         }
 
         public async Task Delete(int id)
         {
             var c = characters.FirstOrDefault(item => item.Id == id);
-
-            if (c == null) return;
-
-            characters.Remove(c);
-        }
-
-        public async Task Delete(Character character)
-        {
-            if (character == null) return;
-
-            var c = characters.FirstOrDefault(item => item.Id == character.Id);
 
             if (c == null) return;
 

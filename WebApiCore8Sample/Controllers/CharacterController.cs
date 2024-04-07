@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using WebApiCore8Sample.Dtos;
 using WebApiCore8Sample.Models;
 using WebApiCore8Sample.Services;
 
@@ -17,70 +20,69 @@ namespace WebApiCore8Sample.Controllers
 
         // GET: api/<CharacterController>
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<Character>>> Get()
+        public async Task<ActionResult<ServiceResponse<CharacterGetDto>>> Get()
         {
-            try
+            var response = await characterService.Get();
+
+            if (response.Status == false)
             {
-                return Ok(await characterService.Get());
+                if (response.StatusCode == (int)HttpStatusCode.NotFound) return NotFound(response);
+                if (response.StatusCode == (int)HttpStatusCode.BadRequest) return BadRequest(response);
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+
+            return Ok(response);
         }
 
         // GET api/<CharacterController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ServiceResponse<Character>>> Get(int id)
+        public async Task<ActionResult<ServiceResponse<CharacterGetDto>>> Get(int id)
         {
-            try
+            var response = await characterService.Get(id);
+
+            if (response.Status == false)
             {
-                return Ok(await characterService.Get(id));
+                if (response.StatusCode == (int)HttpStatusCode.NotFound) return NotFound(response);
+                if (response.StatusCode == (int)HttpStatusCode.BadRequest) return BadRequest(response);
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+
+            return Ok(response);
         }
 
         // POST api/<CharacterController>
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<Character>>> Post([FromBody] Character character)
+        public async Task<ActionResult<ServiceResponse<CharacterGetDto>>> Post([FromBody] CharacterAddDto character)
         {
-            try
+            var response = await characterService.Add(character);
+
+            if (response.Status == false)
             {
-                return Ok(await characterService.Add(character));
+                if (response.StatusCode == (int)HttpStatusCode.NotFound) return NotFound(response);
+                if (response.StatusCode == (int)HttpStatusCode.BadRequest) return BadRequest(response);
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+
+            return Ok(response);
         }
 
         // PUT api/<CharacterController>/5
         [HttpPut("{id}")]
-        public async Task Put(int id, [FromBody] Character character)
+        public async Task<ActionResult<ServiceResponse<CharacterGetDto>>> Put(int id, [FromBody] CharacterUpdateDto character)
         {
-            try
+            var response = await characterService.Update(id, character);
+
+            if (response.Status == false)
             {
-                await characterService.Update(id, character);
+                if (response.StatusCode == (int)HttpStatusCode.NotFound) return NotFound(response);
+                if (response.StatusCode == (int)HttpStatusCode.BadRequest) return BadRequest(response);
             }
-            catch (Exception ex)
-            {
-            }
+
+            return Ok(response);
         }
 
         // DELETE api/<CharacterController>/5
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            try
-            {
-                await characterService.Delete(id);
-            }
-            catch (Exception ex)
-            {
-            }
+            await characterService.Delete(id);
         }
     }
 }
