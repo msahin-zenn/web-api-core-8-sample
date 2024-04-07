@@ -49,7 +49,7 @@ namespace WebApiCore8Sample
             {
                 c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
-                    Description = "Bearer Scheme in Header",
+                    Description = "Authorization header using the Bearer Scheme. Example: bearer #token#",
                     In = ParameterLocation.Header,
                     Name = "Authorization",
                     Type = SecuritySchemeType.ApiKey
