@@ -19,7 +19,7 @@ namespace WebApiCore8Sample.Controllers
             this.authService = authService;
         }
 
-        [Authorize(Roles = "SU")]
+        [Authorize(Roles = "UserManagement")]
         [HttpPost("Register")]
         public async Task<ActionResult<ServiceResponse<int>>> Register([FromBody] ApiUserRegisterDto apiUserDto)
         {
