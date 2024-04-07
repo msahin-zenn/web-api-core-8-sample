@@ -11,5 +11,6 @@ namespace WebApiCore8Sample.Data
         }
 
         public DbSet<Character> Characters => Set<Character>();
+        public DbSet<ApiUser> ApiUsers => Set<ApiUser>();
     }
 }

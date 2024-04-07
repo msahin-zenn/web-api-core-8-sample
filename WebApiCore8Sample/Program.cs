@@ -44,6 +44,7 @@ namespace WebApiCore8Sample
             builder.Services.AddSwaggerGen();
             builder.Services.AddAutoMapper(typeof(Program).Assembly);
             builder.Services.AddScoped<ICharacterService, CharacterService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             var app = builder.Build();
 
