@@ -67,7 +67,7 @@ namespace WebApiCore8Sample.Services.AuthService
             }
             else
             {
-                var token = CreateToken(user);
+                var token = SecurityTokenGenerate(user);
 
                 response.Data = token;
             }
@@ -102,7 +102,7 @@ namespace WebApiCore8Sample.Services.AuthService
             }
         }
 
-        private string CreateToken(ApiUser user)
+        private string SecurityTokenGenerate(ApiUser user)
         {
             if (jwtSettings.Key == null) throw new ArgumentNullException(nameof(jwtSettings.Key));
 
