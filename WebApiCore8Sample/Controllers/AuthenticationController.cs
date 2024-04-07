@@ -21,9 +21,9 @@ namespace WebApiCore8Sample.Controllers
 
         [Authorize(Roles = "SU")]
         [HttpPost("Register")]
-        public async Task<ActionResult<ServiceResponse<int>>> Register([FromBody] ApiUserRequestDto apiUserDto)
+        public async Task<ActionResult<ServiceResponse<int>>> Register([FromBody] ApiUserRegisterDto apiUserDto)
         {
-            var response = await authService.Register(new ApiUser { Username = apiUserDto.Username }, apiUserDto.Password);
+            var response = await authService.Register(new ApiUser { Username = apiUserDto.Username, Role = apiUserDto.Role }, apiUserDto.Password);
 
             if (response.Status == false)
             {
@@ -36,7 +36,7 @@ namespace WebApiCore8Sample.Controllers
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        public async Task<ActionResult<ServiceResponse<int>>> Login([FromBody] ApiUserRequestDto apiUserDto)
+        public async Task<ActionResult<ServiceResponse<int>>> Login([FromBody] ApiUserLoginDto apiUserDto)
         {
             var response = await authService.Login(apiUserDto.Username, apiUserDto.Password);
 
