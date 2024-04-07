@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using WebApiCore8Sample.Dtos;
 using WebApiCore8Sample.Models;
@@ -8,6 +9,7 @@ namespace WebApiCore8Sample.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CharacterController : ControllerBase
     {
         private readonly ICharacterService characterService;
