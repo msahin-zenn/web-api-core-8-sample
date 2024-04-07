@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
+using WebApiCore8Sample.Data;
 using WebApiCore8Sample.Dtos;
 using WebApiCore8Sample.Models;
 
@@ -8,29 +10,20 @@ namespace WebApiCore8Sample.Services
 {
     public class CharacterService : ICharacterService
     {
-        private static List<Character> characters = new List<Character>()
-        {
-            new Character()
-            {
-                Id = 1
-            },
-            new Character()
-            {
-                Id = 2
-            }
-        };
-
         private readonly IMapper mapper;
+        private readonly DataContext context;
 
-        public CharacterService(IMapper mapper)
+        public CharacterService(IMapper mapper, DataContext context)
         {
             this.mapper = mapper;
+            this.context = context;
         }
 
         public async Task<ServiceResponse<List<CharacterGetDto>>> Get()
         {
             var response = new ServiceResponse<List<CharacterGetDto>>();
 
+            var characters = await context.Characters.ToListAsync();
             response.Data = mapper.Map<List<CharacterGetDto>>(characters);
             return response;
         }
@@ -39,7 +32,7 @@ namespace WebApiCore8Sample.Services
         {
             var response = new ServiceResponse<CharacterGetDto>();
 
-            var character = characters.FirstOrDefault(item => item.Id == id);
+            var character = await context.Characters.FirstOrDefaultAsync(item => item.Id == id);
 
             if (character == null)
             {
@@ -79,7 +72,7 @@ namespace WebApiCore8Sample.Services
                 return response;
             }
 
-            var character = characters.FirstOrDefault(item => item.Name == characterInput.Name);
+            var character = await context.Characters.FirstOrDefaultAsync(item => item.Name == characterInput.Name);
 
             if (character != null)
             {
@@ -92,9 +85,10 @@ namespace WebApiCore8Sample.Services
             }
 
             var c = mapper.Map<Character>(characterInput);
-            c.Id = characters.Max(item => item.Id) + 1;
 
-            characters.Add(c);
+            context.Characters.Add(c);
+            await context.SaveChangesAsync();
+
             response.Data = mapper.Map<CharacterGetDto>(c);
             return response;
         }
@@ -103,7 +97,7 @@ namespace WebApiCore8Sample.Services
         {
             var response = new ServiceResponse<CharacterGetDto>();
 
-            var character = characters.FirstOrDefault(item => item.Id == id);
+            var character = await context.Characters.FirstOrDefaultAsync(item => item.Id == id);
 
             if (character == null)
             {
@@ -135,17 +129,21 @@ namespace WebApiCore8Sample.Services
                 return response;
             }
 
-            response.Data = mapper.Map<CharacterGetDto>(mapper.Map(characterInput, character));
+            var updatedCharacter = mapper.Map(characterInput, character);
+            await context.SaveChangesAsync();
+
+            response.Data = mapper.Map<CharacterGetDto>(updatedCharacter);
             return response;
         }
 
         public async Task Delete(int id)
         {
-            var c = characters.FirstOrDefault(item => item.Id == id);
+            var c = await context.Characters.FirstOrDefaultAsync(item => item.Id == id);
 
             if (c == null) return;
 
-            characters.Remove(c);
+            context.Characters.Remove(c);
+            await context.SaveChangesAsync();
         }
     }
 }

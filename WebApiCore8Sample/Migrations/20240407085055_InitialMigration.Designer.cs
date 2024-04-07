@@ -11,7 +11,7 @@ using WebApiCore8Sample.Data;
 namespace WebApiCore8Sample.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240405030519_InitialMigration")]
+    [Migration("20240407085055_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -32,9 +32,24 @@ namespace WebApiCore8Sample.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("Class")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Defence")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HintPoints")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Intelligence")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Strength")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
