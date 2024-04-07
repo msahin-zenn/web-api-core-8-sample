@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using System.Net;
 using WebApiCore8Sample.Dtos;
 using WebApiCore8Sample.Models;
+using WebApiCore8Sample.Services.AuthService;
 
 namespace WebApiCore8Sample.Controllers
 {
@@ -16,59 +12,41 @@ namespace WebApiCore8Sample.Controllers
     [Authorize]
     public class AuthenticationController : ControllerBase
     {
-        private readonly JwtSettings jwtSettings;
+        private readonly IAuthService authService;
 
-        public AuthenticationController(IOptions<JwtSettings> jwtSettings)
+        public AuthenticationController(IAuthService authService)
         {
-            this.jwtSettings = jwtSettings.Value;
+            this.authService = authService;
+        }
+
+        [Authorize(Roles = "UserManagement")]
+        [HttpPost("Register")]
+        public async Task<ActionResult<ServiceResponse<int>>> Register([FromBody] ApiUserRegisterDto apiUserDto)
+        {
+            var response = await authService.Register(new ApiUser { Username = apiUserDto.Username, Role = apiUserDto.Role }, apiUserDto.Password);
+
+            if (response.Status == false)
+            {
+                if (response.StatusCode == (int)HttpStatusCode.NotFound) return NotFound(response);
+                if (response.StatusCode == (int)HttpStatusCode.BadRequest) return BadRequest(response);
+            }
+
+            return Ok(response);
         }
 
         [AllowAnonymous]
-        [HttpPost]
-        public IActionResult Login([FromBody] ApiUserRequestDto apiUserDto)
+        [HttpPost("Login")]
+        public async Task<ActionResult<ServiceResponse<int>>> Login([FromBody] ApiUserLoginDto apiUserDto)
         {
-            if (apiUserDto == null) return NotFound("Kullanıcı Bulunamadı.");
+            var response = await authService.Login(apiUserDto.Username, apiUserDto.Password);
 
-            var apiUser = new ApiUser();
-            apiUser.Username = apiUserDto.Username;
-            apiUser.Password = apiUserDto.Password;
-
-            var user = AuthenticationValidate(apiUser);
-
-            if (user == null) return NotFound("Kullanıcı Bulunamadı.");
-
-            var token = CreateToken(user);
-
-            return Ok(token);
-        }
-
-        private ApiUser? AuthenticationValidate(ApiUser apiUser)
-        {
-            return ApiUsers.Users
-                     .FirstOrDefault(user => user.Username == apiUser.Username
-                                     && user.Password == apiUser.Password);
-        }
-
-        private string CreateToken(ApiUser user)
-        {
-            if (jwtSettings.Key == null) throw new ArgumentNullException(nameof(jwtSettings.Key));
-
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claimValues = new[]
+            if (response.Status == false)
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Username!),
-                new Claim(ClaimTypes.Role, user.Role!)
-            };
+                if (response.StatusCode == (int)HttpStatusCode.NotFound) return NotFound(response);
+                if (response.StatusCode == (int)HttpStatusCode.BadRequest) return BadRequest(response);
+            }
 
-            var token = new JwtSecurityToken(jwtSettings.Issuer,
-                                                jwtSettings.Audience,
-                                                claimValues,
-                                                expires: DateTime.Now.AddDays(1),
-                                                signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return Ok(response);
         }
     }
 }
